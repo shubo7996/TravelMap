@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    
+    var titleArray = [String]()
+    var subtitleArray = [String]()
+    var latitudeArray = [Double]()
+    var longitudeArray = [Double]()
 
     @IBOutlet weak var MapTableView: UITableView!
     override func viewDidLoad() {
@@ -18,6 +22,15 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
 
         MapTableView.delegate = self
         MapTableView.dataSource = self
+        fetchData()
+    }
+    
+    func fetchData(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
+        request.returnsObjectsAsFaults = false
+        
         
     }
 
