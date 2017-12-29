@@ -31,16 +31,46 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
         request.returnsObjectsAsFaults = false
         
+        do{
+            let results = try context.fetch(request)
+            
+            if results.count > 0 {
+                self.titleArray.removeAll(keepingCapacity: false)
+                self.subtitleArray.removeAll(keepingCapacity: false)
+                self.latitudeArray.removeAll(keepingCapacity: false)
+                self.longitudeArray.removeAll(keepingCapacity: false)
+                for result in results as! [NSManagedObject] {
+                    if let title = result.value(forKey: "title") as? String {
+                        self.titleArray.append(title)
+                    }
+                    if let subtitle = result.value(forKey: "subtitle") as? String {
+                        self.subtitleArray.append(subtitle)
+                    }
+                    if let latitude = result.value(forKey: "latitude") as? Double {
+                        self.latitudeArray.append(latitude)
+                    }
+                    if let longitude = result.value(forKey: "longitude") as? Double {
+                        self.longitudeArray.append(longitude)
+                    }
+                    self.MapTableView.reloadData()
+                }
+            }
+            
+        } catch {
+            print("error")
+            
+        }
+        
         
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return titleArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = MapTableView.dequeueReusableCell(withIdentifier: "mapCell")
-        cell?.textLabel?.text = "Hello"
+        cell?.textLabel?.text = titleArray[indexPath.row]
         return cell!
         
     }
